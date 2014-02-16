@@ -302,7 +302,7 @@ class CommandGALine: public Command {
 	}
 	else
 	{
-		if (ServerInstance->XLines->DelLine(target.c_str(),"A",user))
+		if (ServerInstance->XLines->DelLine(target.c_str(),"GA",user))
 		{
 			ServerInstance->SNO->WriteToSnoMask('x',"%s removed GA-line on %s",user->nick.c_str(),target.c_str());
 		}
