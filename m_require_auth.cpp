@@ -140,7 +140,7 @@ class ALineFactory : public XLineFactory
  public:
 	ALineFactory() : XLineFactory("A") { }
 
-	/** Generate a GALine
+	/** Generate an ALine
 	 */
 	ALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask)
 	{
