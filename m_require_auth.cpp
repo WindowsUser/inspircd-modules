@@ -371,7 +371,7 @@ public:
 					ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
 				}
 				else{
-					ServerInstance->Users->QuitUser(user, "GA-Lined"+globallines->reason);
+					ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
 				}
 			}
 		}
