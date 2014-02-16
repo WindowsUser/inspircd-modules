@@ -1,4 +1,1 @@
-inspircd-modules
-================
-
-InspIRCd modules
+These are modules that I wrote for InspIRCd. They are released under the same license as InspIRCd.
