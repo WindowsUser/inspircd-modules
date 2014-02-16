@@ -368,10 +368,10 @@ public:
 			if(locallines||globallines){//If there are lines matching this user
 				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined and/or GA-Lined).");
 				if(locallines){
-					ServerInstance->Users->QuitUser(user, "A-Lined");
+					ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
 				}
 				else{
-					ServerInstance->Users->QuitUser(user, "GA-Lined");
+					ServerInstance->Users->QuitUser(user, "GA-Lined"+globallines->reason);
 				}
 			}
 		}
