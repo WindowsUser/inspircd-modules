@@ -365,15 +365,14 @@ public:
 		if(!isLoggedIn(user)){
 			XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
 			XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
-			if(locallines||globallines){//If there are lines matching this user
-				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined and/or GA-Lined).");
-				if(locallines){
-					ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
-				}
-				else{
-					ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
-				}
+			if(locallines){//If there are lines matching this user
+				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).");
+				ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
 			}
+			else if(globallines){
+				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
+				ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
+			}	
 		}
 	}
 };
