@@ -367,6 +367,12 @@ public:
 			XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
 			if(locallines||globallines){//If there are lines matching this user
 				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined and/or GA-Lined).");
+				if(locallines){
+					ServerInstance->Users->QuitUser(user, "A-Lined");
+				}
+				else{
+					ServerInstance->Users->QuitUser(user, "GA-Lined");
+				}
 			}
 		}
 	}
