@@ -36,7 +36,7 @@ class ALine : public XLine{
 		return (InspIRCd::MatchCIDR(str.c_str(), matchtext));
 	}
 	void Apply(User* u){
-		if(u->registered==REG_ALL&&!isLoggedIn(u)){
+		if(u->registered==REG_ALL&&!isLoggedIn(u)&&!u->isOper()){
 			DefaultApply(u, "A", (this->identmask == "*") ? true : false);
 		}
 	}
@@ -134,7 +134,7 @@ public:
 		return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
 	}
 	virtual ModResult OnUserConnect(LocalUser* user){ //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
-		if(!isLoggedIn(user){
+		if(!isLoggedIn(user)){
 			XLine *locallines = ServerInstance->Xlines>MatchesLine("A", user);
 			XLine *globallines = ServerInstance->Xlines>MatchesLine("GA", user);
 			if(locallines||globallines){//If there are lines matching this user
