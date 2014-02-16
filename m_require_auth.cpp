@@ -154,7 +154,7 @@ class GALineFactory : public XLineFactory
  public:
 	GALineFactory() : XLineFactory("GA") { }
 
-	/** Generate an ALine
+	/** Generate a GALine
 	 */
 	GALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask)
 	{
@@ -276,8 +276,8 @@ class CommandGALine: public Command {
 		}
 
 		long duration = ServerInstance->Duration(parameters[1].c_str());
-		ALine* al = new ALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
-		if (ServerInstance->XLines->AddLine(al, user))
+		GALine* gal = new GALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
+		if (ServerInstance->XLines->AddLine(gal, user))
 		{
 			if (!duration)
 			{
@@ -295,7 +295,7 @@ class CommandGALine: public Command {
 		}
 		else
 		{
-			delete al;
+			delete gal;
 			user->WriteServ("NOTICE %s :*** GA-Line for %s already exists",user->nick.c_str(),target.c_str());
 		}
 
