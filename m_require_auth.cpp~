@@ -335,7 +335,7 @@ public:
 	void init()
 	{
 		ServerInstance->XLines->RegisterFactory(&fact1);
-		ServerInstance->XLines->RegisterFactory(&fact2);
+		ServerInstance->XLines->RegisterFactory(&fact1);
 		ServerInstance->Modules->AddService(cmd1);
 		ServerInstance->Modules->AddService(cmd2);
 		Implementation eventlist[] = { I_OnUserConnect, I_OnStats };
