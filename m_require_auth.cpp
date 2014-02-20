@@ -86,7 +86,7 @@ class GALine : public XLine{
 		ServerInstance->SNO->WriteToSnoMask('x',"Removing expired GA-Line %s@%s (set by %s %ld seconds ago)",
 		identmask.c_str(),hostmask.c_str(),source.c_str(),(long)(ServerInstance->Time() - this->set_time));
 	}
-		bool isLoggedIn(User* user){
+	bool isLoggedIn(User* user){
 		const AccountExtItem* accountext = GetAccountExtItem();
 		if (accountext && accountext->get(user))
 			return true;
@@ -94,12 +94,11 @@ class GALine : public XLine{
 	}
 	bool Matches(User* u){
 		if (u->exempt)
-		return false;
+			return false;
 
 		if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map))
 		{
-			if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) ||
-				InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map))
+			if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) || InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map))
 			{
 				return true;
 			}
@@ -355,7 +354,6 @@ public:
 				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
 				ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
 			}	
-
 		}
 	}
 };
