@@ -110,7 +110,7 @@ class GALine : public XLine{
 	bool Matches(const std::string &s)
 	{
 		if (matchtext == s)
-		return true;
+			return true;
 		return false;
 	}
 	const char* Displayable()
@@ -134,7 +134,7 @@ class ALineFactory : public XLineFactory
 
 class GALineFactory : public XLineFactory
 {
- public:
+ 	public:
 	GALineFactory() : XLineFactory("GA") { }
 
 	/** Generate a GALine
