@@ -68,6 +68,7 @@ class ALine : public XLine{
 	}
 	void Apply(User* u){
 		if(u->registered==REG_ALL&&!isLoggedIn(u)){
+			u->WriteServ("NOTICE %s :*** NOTICE -- You now need to identify via SASL to use this server (you were not identified to services).");
 			DefaultApply(u, "A", (this->identmask == "*") ? true : false);
 		}
 	}
@@ -96,6 +97,7 @@ class GALine : public XLine{
 	bool IsBurstable(){ return true; }
 	void Apply(User* u){
 		if(u->registered==REG_ALL&&!isLoggedIn(u)){
+			u->WriteServ("NOTICE %s :*** NOTICE -- You now need to identify via SASL to use this server (you were not identified to services).");
 			DefaultApply(u, "GA", (this->identmask == "*") ? true : false);
 		}
 	}
