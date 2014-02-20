@@ -1,23 +1,4 @@
-/*
- * InspIRCd -- Internet Relay Chat Daemon
- *
- *   Copyright (C) 2007-2008 Dennis Friis <peavey@inspircd.org>
- *   Copyright (C) 2005-2008 Robin Burchell <robin+git@viroteck.net>
- *   Copyright (C) 2005-2006 Craig Edwards <craigedwards@brainbox.cc>
- *   Copyright (C) 2006 Oliver Lupton <oliverlupton@gmail.com>
- *
- * This file is part of InspIRCd.  InspIRCd is free software: you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, version 2.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
  
 #include "inspircd.h"
 #include "xline.h"
@@ -212,8 +193,7 @@ class CommandALine: public Command {
 			{
 				time_t c_requires_crap = duration + ServerInstance->Time();
 				std::string timestr = ServerInstance->TimeString(c_requires_crap);
-				ServerInstance->SNO->WriteToSnoMask('x',"%s added timed A-line for %s, expires on %s: %s",user->nick.c_str(),target.c_str(),
-						timestr.c_str(), parameters[2].c_str());
+				ServerInstance->SNO->WriteToSnoMask('x',"%s added timed A-line for %s, expires on %s: %s",user->nick.c_str(),target.c_str(),timestr.c_str(), parameters[2].c_str());
 			}
 
 			ServerInstance->XLines->ApplyLines();
