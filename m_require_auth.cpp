@@ -67,7 +67,7 @@ class ALine : public XLine{
 		return false;
 	}
 	void Apply(User* u){
-		if(u&&u->registered==REG_ALL&&!isLoggedIn(u)){
+		if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)){
 			u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).");
 			ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
 		}
@@ -96,7 +96,7 @@ class GALine : public XLine{
 		matchtext.append("@").append(this->hostmask);}
 	bool IsBurstable(){ return true; }
 	void Apply(User* u){
-		if(u&&u->registered==REG_ALL&&!isLoggedIn(u)){
+		if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)){
 			u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
 			ServerInstance->Users->QuitUser(u, "GA-Lined: "+this->reason);
 		}
@@ -364,7 +364,7 @@ public:
 		return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
 	}
 	virtual void OnUserConnect(LocalUser* user){ //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
-		if(!isLoggedIn(user)){
+		if(user!=NULL&&!isLoggedIn(user)){
 			XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
 			XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
 			if(locallines){//If there are lines matching this user
@@ -375,6 +375,7 @@ public:
 				user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
 				ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
 			}	
+
 		}
 	}
 };
