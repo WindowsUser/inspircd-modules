@@ -67,9 +67,9 @@ class ALine : public XLine{
 		return false;
 	}
 	void Apply(User* u){
-		if(u->registered==REG_ALL&&!isLoggedIn(u)){
-			u->WriteServ("NOTICE %s :*** NOTICE -- You now need to identify via SASL to use this server (you were not identified to services).");
-			DefaultApply(u, "A", (this->identmask == "*") ? true : false);
+		if(u&&u->registered==REG_ALL&&!isLoggedIn(u)){
+			u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).");
+			ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
 		}
 	}
 	void DisplayExpiry(){
@@ -96,9 +96,9 @@ class GALine : public XLine{
 		matchtext.append("@").append(this->hostmask);}
 	bool IsBurstable(){ return true; }
 	void Apply(User* u){
-		if(u->registered==REG_ALL&&!isLoggedIn(u)){
-			u->WriteServ("NOTICE %s :*** NOTICE -- You now need to identify via SASL to use this server (you were not identified to services).");
-			DefaultApply(u, "GA", (this->identmask == "*") ? true : false);
+		if(u&&u->registered==REG_ALL&&!isLoggedIn(u)){
+			u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
+			ServerInstance->Users->QuitUser(u, "GA-Lined: "+this->reason);
 		}
 	}
 	void DisplayExpiry(){
@@ -340,7 +340,7 @@ public:
 		ServerInstance->XLines->RegisterFactory(&fact2);
 		ServerInstance->Modules->AddService(cmd1);
 		ServerInstance->Modules->AddService(cmd2);
-		Implementation eventlist[] = { I_OnUserConnect, I_OnStats };
+		Implementation eventlist[] = {I_OnUserConnect, I_OnStats};
 		ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
 	}
 	virtual ModResult OnStats(char symbol, User* user, string_list &out) //stats A does global lines, stats a local lines.
