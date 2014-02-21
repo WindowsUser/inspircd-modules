@@ -296,6 +296,7 @@ public:
     virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines.
         if (symbol == 'A') {
             ServerInstance->XLines->InvokeStats("GA", 210, user, out);
+	    return MOD_RES_DENY;
         }
         else if (symbol == 'a') {
             ServerInstance->XLines->InvokeStats("A", 210, user, out);
