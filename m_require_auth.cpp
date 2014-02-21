@@ -50,7 +50,7 @@ public:
     }
     void Apply(User* u) {
         if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)) {
-            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).");
+            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
         }
     }
@@ -82,7 +82,7 @@ public:
     }
     void Apply(User* u) {
         if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)) {
-            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
+            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "GA-Lined: "+this->reason);
         }
     }
@@ -353,12 +353,12 @@ public:
             XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
             if(locallines) { //If there are lines matching this user
-                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).");
+                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
 		return MOD_RES_DENY;
             }
             else if(globallines) {
-                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).");
+                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined)."), user->nick.c_str();
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
 		return MOD_RES_DENY;
             }
