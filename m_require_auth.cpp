@@ -327,9 +327,9 @@ public:
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
                 return MOD_RES_DENY;
             }
-        }*/
+        }
         return MOD_RES_PASSTHRU;
-    }
+    }*/
 };
 
 MODULE_INIT(ModuleRequireAuth)
