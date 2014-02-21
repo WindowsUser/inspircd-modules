@@ -358,7 +358,7 @@ public:
                 return MOD_RES_DENY;
             }
             else if(globallines) {
-                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined)."), user->nick.c_str();
+                user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
                 return MOD_RES_DENY;
             }
