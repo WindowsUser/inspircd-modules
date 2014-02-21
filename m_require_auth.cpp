@@ -355,15 +355,15 @@ public:
             if(locallines) { //If there are lines matching this user
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
-		return MOD_RES_DENY;
+                return MOD_RES_DENY;
             }
             else if(globallines) {
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined)."), user->nick.c_str();
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
-		return MOD_RES_DENY;
+                return MOD_RES_DENY;
             }
         }
-	return MOD_RES_PASSTHRU;
+        return MOD_RES_PASSTHRU;
     }
 };
 
