@@ -13,8 +13,7 @@ class ALine : public XLine {
 
     std::string matchtext;
 public:
-    ALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host) : XLine(s_time, d, src, re, "A"), identmask(ident), hostmask(host)
-    {
+    ALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host) : XLine(s_time, d, src, re, "A"), identmask(ident), hostmask(host) {
         matchtext = this->identmask;
         matchtext.append("@").append(this->hostmask);
     }
@@ -31,16 +30,16 @@ public:
         if (u->exempt)
             return false;
 
-        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)){
+        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)) {
             if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) ||
-                    InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)){
+                    InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)) {
                 return true;
             }
         }
 
         return false;
     }
-    bool Matches(const std::string &s){
+    bool Matches(const std::string &s) {
         if (matchtext == s)
             return true;
         return false;
@@ -55,7 +54,7 @@ public:
         ServerInstance->SNO->WriteToSnoMask('x',"Removing expired A-Line %s@%s (set by %s %ld seconds ago)",
                                             identmask.c_str(),hostmask.c_str(),source.c_str(),(long)(ServerInstance->Time() - this->set_time));
     }
-    const char* Displayable(){
+    const char* Displayable() {
         return matchtext.c_str();
     }
 };
@@ -96,15 +95,15 @@ public:
         if (u->exempt)
             return false;
 
-        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)){
-            if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) || InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)){
+        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)) {
+            if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) || InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)) {
                 return true;
             }
         }
 
         return false;
     }
-    bool Matches(const std::string &s){
+    bool Matches(const std::string &s) {
         if (matchtext == s)
             return true;
         return false;
@@ -120,7 +119,7 @@ public:
 
     /** Generate an ALine
      */
-    ALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask){
+    ALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask) {
         IdentHostPair ih = ServerInstance->XLines->IdentSplit(xline_specific_mask);
         return new ALine(set_time, duration, source, reason, ih.first, ih.second);
     }
@@ -294,15 +293,15 @@ public:
         Implementation eventlist[] = {I_OnUserRegister, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
-    virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines. 
+    virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines.
         if (symbol == 'A') {
             ServerInstance->XLines->InvokeStats("GA", 210, user, out);
-	}
-        else if (symbol == 'a'){
+        }
+        else if (symbol == 'a') {
             ServerInstance->XLines->InvokeStats("A", 210, user, out);
             return MOD_RES_DENY;
-	}
-	return MOD_RES_PASSTHRU;
+        }
+        return MOD_RES_PASSTHRU;
     }
     virtual ~ModuleRequireAuth() {
         ServerInstance->XLines->DelAll("A");
