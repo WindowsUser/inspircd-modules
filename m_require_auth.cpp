@@ -2,7 +2,6 @@
 
 #include "inspircd.h"
 #include "xline.h"
-#include "bancache.h"
 #include "account.h"
 class ALine : public XLine {
     /** Ident mask (ident part only)
@@ -151,7 +150,7 @@ public:
 };
 class CommandALine: public Command {
 public:
-    CommandALine(Module* creator) : Command(creator, "ALINE", 1, 3) {
+    CommandALine(Module* c) : Command(c, "ALINE", 1, 3) {
         flags_needed = 'o';
         this->syntax = "<nick> [<duration> :<reason>]";
     }
@@ -228,7 +227,7 @@ public:
 
 class CommandGALine: public Command {
 public:
-    CommandGALine(Module* creator) : Command(creator, "GALINE", 1, 3) {
+    CommandGALine(Module* c) : Command(c, "GALINE", 1, 3) {
         flags_needed = 'o';
         this->syntax = "<nick> [<duration> :<reason>]";
     }
