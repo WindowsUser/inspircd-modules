@@ -290,7 +290,7 @@ public:
         ServerInstance->XLines->RegisterFactory(&fact2);
         ServerInstance->Modules->AddService(cmd1);
         ServerInstance->Modules->AddService(cmd2);
-        Implementation eventlist[] = {I_OnStats};
+        Implementation eventlist[] = {I_OnUserPostConnect, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
     virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines.
@@ -313,7 +313,7 @@ public:
     virtual Version GetVersion() {
         return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
     }
-    /*virtual ModResult OnUserPostConnect(LocalUser* user) { //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
+    virtual ModResult OnUserPostConnect(LocalUser* user) { //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
         if(user!=NULL&&!isLoggedIn(user)) {
             XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
@@ -329,7 +329,7 @@ public:
             }
         }
         return MOD_RES_PASSTHRU;
-    }*/
+    }
 };
 
 MODULE_INIT(ModuleRequireAuth)
