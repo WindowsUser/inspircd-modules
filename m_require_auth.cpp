@@ -45,7 +45,7 @@ public:
         return false;
     }
     void Apply(User* u) {
-        if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)) {
+        if(u!=NULL&&!isLoggedIn(u)) {
             u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
         }
@@ -76,7 +76,7 @@ public:
         return true;
     }
     void Apply(User* u) {
-        if(u!=NULL&&u->registered==REG_ALL&&!isLoggedIn(u)) {
+        if(u!=NULL&&!isLoggedIn(u)) {
             u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "GA-Lined: "+this->reason);
         }
@@ -290,7 +290,7 @@ public:
         ServerInstance->XLines->RegisterFactory(&fact2);
         ServerInstance->Modules->AddService(cmd1);
         ServerInstance->Modules->AddService(cmd2);
-        Implementation eventlist[] = {I_OnSetConnectClass, I_OnStats};
+        Implementation eventlist[] = {I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
     virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines.
@@ -313,7 +313,7 @@ public:
     virtual Version GetVersion() {
         return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
     }
-    virtual ModResult OnUserPostConnect(LocalUser* user) { //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
+    /*virtual ModResult OnUserPostConnect(LocalUser* user) { //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
         if(user!=NULL&&!isLoggedIn(user)) {
             XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
@@ -327,7 +327,7 @@ public:
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
                 return MOD_RES_DENY;
             }
-        }
+        }*/
         return MOD_RES_PASSTHRU;
     }
 };
