@@ -31,19 +31,16 @@ public:
         if (u->exempt)
             return false;
 
-        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map))
-        {
+        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)){
             if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) ||
-                    InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map))
-            {
+                    InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)){
                 return true;
             }
         }
 
         return false;
     }
-    bool Matches(const std::string &s)
-    {
+    bool Matches(const std::string &s){
         if (matchtext == s)
             return true;
         return false;
@@ -58,8 +55,7 @@ public:
         ServerInstance->SNO->WriteToSnoMask('x',"Removing expired A-Line %s@%s (set by %s %ld seconds ago)",
                                             identmask.c_str(),hostmask.c_str(),source.c_str(),(long)(ServerInstance->Time() - this->set_time));
     }
-    const char* Displayable()
-    {
+    const char* Displayable(){
         return matchtext.c_str();
     }
 };
@@ -100,18 +96,15 @@ public:
         if (u->exempt)
             return false;
 
-        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map))
-        {
-            if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) || InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map))
-            {
+        if (InspIRCd::Match(u->ident, this->identmask, ascii_case_insensitive_map)){
+            if (InspIRCd::MatchCIDR(u->host, this->hostmask, ascii_case_insensitive_map) || InspIRCd::MatchCIDR(u->GetIPString(), this->hostmask, ascii_case_insensitive_map)){
                 return true;
             }
         }
 
         return false;
     }
-    bool Matches(const std::string &s)
-    {
+    bool Matches(const std::string &s){
         if (matchtext == s)
             return true;
         return false;
@@ -121,29 +114,25 @@ public:
         return matchtext.c_str();
     }
 };
-class ALineFactory : public XLineFactory
-{
+class ALineFactory : public XLineFactory {
 public:
     ALineFactory() : XLineFactory("A") { }
 
     /** Generate an ALine
      */
-    ALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask)
-    {
+    ALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask){
         IdentHostPair ih = ServerInstance->XLines->IdentSplit(xline_specific_mask);
         return new ALine(set_time, duration, source, reason, ih.first, ih.second);
     }
 };
 
-class GALineFactory : public XLineFactory
-{
+class GALineFactory : public XLineFactory {
 public:
     GALineFactory() : XLineFactory("GA") { }
 
     /** Generate a GALine
      */
-    GALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask)
-    {
+    GALine* Generate(time_t set_time, long duration, std::string source, std::string reason, std::string xline_specific_mask) {
         IdentHostPair ih = ServerInstance->XLines->IdentSplit(xline_specific_mask);
         return new GALine(set_time, duration, source, reason, ih.first, ih.second);
     }
@@ -157,12 +146,10 @@ public:
     CmdResult Handle(const std::vector<std::string>& parameters, User *user) {
         std::string target = parameters[0];
 
-        if (parameters.size() >= 3)
-        {
+        if (parameters.size() >= 3) {
             IdentHostPair ih;
             User* find = ServerInstance->FindNick(target);
-            if ((find) && (find->registered == REG_ALL))
-            {
+            if ((find) && (find->registered == REG_ALL)) {
                 ih.first = "*";
                 ih.second = find->GetIPString();
                 target = std::string("*@") + find->GetIPString();
@@ -170,8 +157,7 @@ public:
             else
                 ih = ServerInstance->XLines->IdentSplit(target);
 
-            if (ih.first.empty())
-            {
+            if (ih.first.empty()) {
                 user->WriteServ("NOTICE %s :*** Target not found", user->nick.c_str());
                 return CMD_FAILURE;
             }
@@ -179,22 +165,18 @@ public:
             if (ServerInstance->HostMatchesEveryone(ih.first+"@"+ih.second,user))
                 return CMD_FAILURE;
 
-            else if (target.find('!') != std::string::npos)
-            {
+            else if (target.find('!') != std::string::npos) {
                 user->WriteServ("NOTICE %s :*** A-Line cannot operate on nick!user@host masks",user->nick.c_str());
                 return CMD_FAILURE;
             }
 
             long duration = ServerInstance->Duration(parameters[1].c_str());
             ALine* al = new ALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
-            if (ServerInstance->XLines->AddLine(al, user))
-            {
-                if (!duration)
-                {
+            if (ServerInstance->XLines->AddLine(al, user)) {
+                if (!duration) {
                     ServerInstance->SNO->WriteToSnoMask('x',"%s added permanent A-line for %s: %s",user->nick.c_str(),target.c_str(), parameters[2].c_str());
                 }
-                else
-                {
+                else {
                     time_t c_requires_crap = duration + ServerInstance->Time();
                     std::string timestr = ServerInstance->TimeString(c_requires_crap);
                     ServerInstance->SNO->WriteToSnoMask('x',"%s added timed A-line for %s, expires on %s: %s",user->nick.c_str(),target.c_str(),timestr.c_str(), parameters[2].c_str());
@@ -202,21 +184,17 @@ public:
 
                 ServerInstance->XLines->ApplyLines();
             }
-            else
-            {
+            else {
                 delete al;
                 user->WriteServ("NOTICE %s :*** A-Line for %s already exists",user->nick.c_str(),target.c_str());
             }
 
         }
-        else
-        {
-            if (ServerInstance->XLines->DelLine(target.c_str(),"A",user))
-            {
+        else {
+            if (ServerInstance->XLines->DelLine(target.c_str(),"A",user)) {
                 ServerInstance->SNO->WriteToSnoMask('x',"%s removed A-line on %s",user->nick.c_str(),target.c_str());
             }
-            else
-            {
+            else {
                 user->WriteServ("NOTICE %s :*** A-line %s not found in list, try /stats a.",user->nick.c_str(),target.c_str());
             }
         }
@@ -234,12 +212,10 @@ public:
     CmdResult Handle(const std::vector<std::string>& parameters, User *user) {
         std::string target = parameters[0];
 
-        if (parameters.size() >= 3)
-        {
+        if (parameters.size() >= 3) {
             IdentHostPair ih;
             User* find = ServerInstance->FindNick(target);
-            if ((find) && (find->registered == REG_ALL))
-            {
+            if ((find) && (find->registered == REG_ALL)) {
                 ih.first = "*";
                 ih.second = find->GetIPString();
                 target = std::string("*@") + find->GetIPString();
@@ -247,8 +223,7 @@ public:
             else
                 ih = ServerInstance->XLines->IdentSplit(target);
 
-            if (ih.first.empty())
-            {
+            if (ih.first.empty()) {
                 user->WriteServ("NOTICE %s :*** Target not found", user->nick.c_str());
                 return CMD_FAILURE;
             }
@@ -256,22 +231,18 @@ public:
             if (ServerInstance->HostMatchesEveryone(ih.first+"@"+ih.second,user))
                 return CMD_FAILURE;
 
-            else if (target.find('!') != std::string::npos)
-            {
+            else if (target.find('!') != std::string::npos) {
                 user->WriteServ("NOTICE %s :*** GA-Line cannot operate on nick!user@host masks",user->nick.c_str());
                 return CMD_FAILURE;
             }
 
             long duration = ServerInstance->Duration(parameters[1].c_str());
             GALine* gal = new GALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
-            if (ServerInstance->XLines->AddLine(gal, user))
-            {
-                if (!duration)
-                {
+            if (ServerInstance->XLines->AddLine(gal, user)) {
+                if (!duration) {
                     ServerInstance->SNO->WriteToSnoMask('x',"%s added permanent GA-line for %s: %s",user->nick.c_str(),target.c_str(), parameters[2].c_str());
                 }
-                else
-                {
+                else {
                     time_t c_requires_crap = duration + ServerInstance->Time();
                     std::string timestr = ServerInstance->TimeString(c_requires_crap);
                     ServerInstance->SNO->WriteToSnoMask('x',"%s added timed GA-line for %s, expires on %s: %s",user->nick.c_str(),target.c_str(),
@@ -280,21 +251,17 @@ public:
 
                 ServerInstance->XLines->ApplyLines();
             }
-            else
-            {
+            else {
                 delete gal;
                 user->WriteServ("NOTICE %s :*** GA-Line for %s already exists",user->nick.c_str(),target.c_str());
             }
 
         }
-        else
-        {
-            if (ServerInstance->XLines->DelLine(target.c_str(),"GA",user))
-            {
+        else {
+            if (ServerInstance->XLines->DelLine(target.c_str(),"GA",user)) {
                 ServerInstance->SNO->WriteToSnoMask('x',"%s removed GA-line on %s",user->nick.c_str(),target.c_str());
             }
-            else
-            {
+            else {
                 user->WriteServ("NOTICE %s :*** GA-Line %s not found in list, try /stats A.",user->nick.c_str(),target.c_str());
             }
         }
@@ -319,8 +286,7 @@ public:
     ModuleRequireAuth() : cmd1(this), cmd2(this) {
 
     }
-    void init()
-    {
+    void init() {
         ServerInstance->XLines->RegisterFactory(&fact1);
         ServerInstance->XLines->RegisterFactory(&fact2);
         ServerInstance->Modules->AddService(cmd1);
@@ -328,15 +294,15 @@ public:
         Implementation eventlist[] = {I_OnUserRegister, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
-    virtual ModResult OnStats(char symbol, User* user, string_list &out) //stats A does global lines, stats a local lines.
-    {
-        if (symbol != 'A' && symbol != 'a')
-            return MOD_RES_PASSTHRU;
-        if (symbol == 'A')
+    virtual ModResult OnStats(char symbol, User* user, string_list &out) {//stats A does global lines, stats a local lines. 
+        if (symbol == 'A') {
             ServerInstance->XLines->InvokeStats("GA", 210, user, out);
-        else if (symbol == 'a')
+	}
+        else if (symbol == 'a'){
             ServerInstance->XLines->InvokeStats("A", 210, user, out);
-        return MOD_RES_DENY;
+            return MOD_RES_DENY;
+	}
+	return MOD_RES_PASSTHRU;
     }
     virtual ~ModuleRequireAuth() {
         ServerInstance->XLines->DelAll("A");
@@ -344,8 +310,7 @@ public:
         ServerInstance->XLines->UnregisterFactory(&fact1);
         ServerInstance->XLines->UnregisterFactory(&fact2);
     }
-    virtual Version GetVersion()
-    {
+    virtual Version GetVersion() {
         return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
     }
     virtual ModResult OnUserRegister(LocalUser* user) { //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
