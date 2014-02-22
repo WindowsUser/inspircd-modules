@@ -319,14 +319,16 @@ public:
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
             if(locallines) { //If there are lines matching this user
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", user->nick.c_str());
-		user->registered=REG_ALL;
+				user->registered=REG_ALL;
                 ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
+				ServerInstance->Users->unregistered_count--;
                 //return MOD_RES_DENY;
             }
             else if(globallines) {
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", user->nick.c_str());
-		user->registered=REG_ALL;
+				user->registered=REG_ALL;
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
+				ServerInstance->Users->unregistered_count--;
                 //return MOD_RES_DENY;
             }
         }
