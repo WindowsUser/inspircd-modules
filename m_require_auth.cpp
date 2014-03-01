@@ -349,7 +349,8 @@ public:
         Implementation eventlist[] = {I_OnCheckReady, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
-    virtual ModResult OnStats(char symbol, User* user, string_list &out) { /*stats A does global lines, stats a local lines.*/
+    virtual ModResult OnStats(char symbol, User* user, string_list &out) 
+	{ /*stats A does global lines, stats a local lines.*/
         if (symbol == 'A')
         {
             ServerInstance->XLines->InvokeStats("GA", 210, user, out);
