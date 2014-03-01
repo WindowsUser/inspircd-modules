@@ -349,8 +349,8 @@ public:
         Implementation eventlist[] = {I_OnCheckReady, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
-    virtual ModResult OnStats(char symbol, User* user, string_list &out) 
-	{ /*stats A does global lines, stats a local lines.*/
+    virtual ModResult OnStats(char symbol, User* user, string_list &out)
+    {   /*stats A does global lines, stats a local lines.*/
         if (symbol == 'A')
         {
             ServerInstance->XLines->InvokeStats("GA", 210, user, out);
@@ -381,7 +381,7 @@ public:
             XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
             if (locallines)
-            {   
+            {
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
                 return MOD_RES_DENY;
