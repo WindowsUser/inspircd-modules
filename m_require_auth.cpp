@@ -54,7 +54,7 @@ public:
     }
     void Apply(User* u)
     {
-        if(u!=NULL&&!isLoggedIn(u))
+        if (u!=NULL && !isLoggedIn(u))
         {
             u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
@@ -92,7 +92,7 @@ public:
     }
     void Apply(User* u)
     {
-        if(u!=NULL&&!isLoggedIn(u))
+        if (u!=NULL&&!isLoggedIn(u))
         {
             u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", u->nick.c_str());
             ServerInstance->Users->QuitUser(u, "GA-Lined: "+this->reason);
@@ -375,17 +375,17 @@ public:
     }
     virtual ModResult OnCheckReady(LocalUser* user)
     {   //I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.
-        if(user!=NULL&&!isLoggedIn(user))
+        if (user!=NULL && !isLoggedIn(user))
         {
             XLine *locallines = ServerInstance->XLines->MatchesLine("A", user);
             XLine *globallines = ServerInstance->XLines->MatchesLine("GA", user);
-            if(locallines)
+            if (locallines)
             {   //If there are lines matching this user
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "A-Lined: "+locallines->reason);
                 return MOD_RES_DENY;
             }
-            else if(globallines)
+            else if (globallines)
             {
                 user->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is GA-Lined).", user->nick.c_str());
                 ServerInstance->Users->QuitUser(user, "GA-Lined: "+globallines->reason);
