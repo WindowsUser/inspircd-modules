@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
- 
+
 /* $ModAuthor: WindowsUser */
 /* $ModDesc: Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines. */
 /* $ModDepends: core 2.0 */
@@ -24,35 +24,9 @@
 #include "inspircd.h"
 #include "xline.h"
 #include "account.h"
-class ALine : public GALine
-{
-
-public:
-    ALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host) : GALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host, "A"), identmask(ident), hostmask(host)
-    {
-        matchtext = this->identmask;
-        matchtext.append("@").append(this->hostmask);
-    }
-    bool IsBurstable()
-    {
-        return false;
-    }
-    void Apply(User* u)
-    {
-        if (!isLoggedIn(u))
-        {
-            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", u->nick.c_str());
-            ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
-        }
-    }
-    void DisplayExpiry()
-    {
-        ServerInstance->SNO->WriteToSnoMask('x',"Removing expired A-Line %s@%s (set by %s %ld seconds ago)",
-                                            identmask.c_str(),hostmask.c_str(),source.c_str(),(long)(ServerInstance->Time() - this->set_time));
-    }
-};
 class GALine : public XLine
 {
+protected:
     /** Ident mask (ident part only)
     */
     std::string identmask;
@@ -67,7 +41,7 @@ public:
         matchtext = this->identmask;
         matchtext.append("@").append(this->hostmask);
     }
-	GALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host, std::string type) : XLine(s_time, d, src, re, type), identmask(ident), hostmask(host)
+    GALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host, std::string othertext) : XLine(s_time, d, src, re, othertext), identmask(ident), hostmask(host)
     {
         matchtext = this->identmask;
         matchtext.append("@").append(this->hostmask);
@@ -116,6 +90,35 @@ public:
         return matchtext.c_str();
     }
 };
+
+class ALine : public GALine
+{
+
+public:
+    ALine(time_t s_time, long d, std::string src, std::string re, std::string ident, std::string host) : GALine(s_time, d, src, re, ident, host, "A")
+    {
+        this->matchtext = this->identmask;
+        this->matchtext.append("@").append(this->hostmask);
+    }
+    bool IsBurstable()
+    {
+        return false;
+    }
+    void Apply(User* u)
+    {
+        if (!isLoggedIn(u))
+        {
+            u->WriteServ("NOTICE %s :*** NOTICE -- You need to identify via SASL to use this server (your host is A-Lined).", u->nick.c_str());
+            ServerInstance->Users->QuitUser(u, "A-Lined: "+this->reason);
+        }
+    }
+    void DisplayExpiry()
+    {
+        ServerInstance->SNO->WriteToSnoMask('x',"Removing expired A-Line %s@%s (set by %s %ld seconds ago)",
+                                            identmask.c_str(),hostmask.c_str(),source.c_str(),(long)(ServerInstance->Time() - this->set_time));
+    }
+};
+
 class ALineFactory : public XLineFactory
 {
 public:
