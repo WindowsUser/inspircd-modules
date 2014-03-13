@@ -368,7 +368,7 @@ public:
         Implementation eventlist[] = {I_OnCheckReady, I_OnStats};
         ServerInstance->Modules->Attach(eventlist, this, sizeof(eventlist)/sizeof(Implementation));
     }
-    virtual ModResult OnStats(char symbol, User* user, string_list &out)
+    ModResult OnStats(char symbol, User* user, string_list &out)
     {   /*stats A does global lines, stats a local lines.*/
         if (symbol == 'A')
         {
@@ -382,18 +382,18 @@ public:
         }
         return MOD_RES_PASSTHRU;
     }
-    virtual ~ModuleRequireAuth()
+    ~ModuleRequireAuth()
     {
         ServerInstance->XLines->DelAll("A");
         ServerInstance->XLines->DelAll("GA");
         ServerInstance->XLines->UnregisterFactory(&fact1);
         ServerInstance->XLines->UnregisterFactory(&fact2);
     }
-    virtual Version GetVersion()
+    Version GetVersion()
     {
         return Version("Gives /aline and /galine, short for auth-lines. Users affected by these will have to use SASL to connect, while any users already connected but not identified to services will be disconnected in a similar manner to G-lines.", VF_COMMON | VF_VENDOR);
     }
-    virtual ModResult OnCheckReady(LocalUser* user)
+    ModResult OnCheckReady(LocalUser* user)
     {   /*I'm afraid that using the normal xline methods would then result in this line being checked at the wrong time.*/
         if (user!=NULL && !isLoggedIn(user))
         {
