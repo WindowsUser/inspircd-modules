@@ -147,7 +147,7 @@ public:
     {
         flags_needed = 'o';
         this->syntax = "<nick> [<duration> :<reason>]";
-		this->linename = linetype;
+	this->linename = linetype;
     }
     CmdResult Handle(const std::vector<std::string>& parameters, User *user)
     {
@@ -183,7 +183,7 @@ public:
 
             long duration = ServerInstance->Duration(parameters[1].c_str());
 			GALine* gal = NULL;
-			ALine* al = NULL; /*I'm a bit hesitent about having a rather useless pointer in either case, but I need these to be in the scope of the entire method and I don't want to duplicate all the below code.*/
+			ALine* al = NULL;
 			bool result = false;
 			if(strcmp(linename.c_str(), "GA")==0)
 			{
@@ -199,16 +199,13 @@ public:
 			{
 				if (!duration)
 				{
-					std::string message = "%s added permanent "+linename+"-line for %s: %s";
 					ServerInstance->SNO->WriteToSnoMask('x', "%s added permanent %s-line for %s: %s",user->nick.c_str(), linename.c_str(), target.c_str(), parameters[2].c_str());
 				}
 				else
 				{
 					time_t c_requires_crap = duration + ServerInstance->Time();
 					std::string timestr = ServerInstance->TimeString(c_requires_crap);
-					std::string message = "%s added timed %s-line for %s, expires on %s: %s";
-					ServerInstance->SNO->WriteToSnoMask('x',"%s added timed %s-line for %s, expires on %s: %s",user->nick.c_str(),linename.c_str(),target.c_str(),
-														timestr.c_str(), parameters[2].c_str());
+					ServerInstance->SNO->WriteToSnoMask('x',"%s added timed %s-line for %s, expires on %s: %s",user->nick.c_str(),linename.c_str(),target.c_str(),timestr.c_str(), parameters[2].c_str());
 				}
 				ServerInstance->XLines->ApplyLines();
 			}
@@ -217,14 +214,6 @@ public:
 				delete gal;
 				delete al;
 				user->WriteServ("NOTICE %s :*** %s-Line for %s already exists",user->nick.c_str(),linename.c_str(),target.c_str());
-			}
-			if(strcmp(linename.c_str(), "A")) /*Remove the unused pointer*/
-			{
-				delete gal;
-			}
-			else if(strcmp(linename.c_str(), "GA"))
-			{
-				delete al;
 			}
         }
         else
