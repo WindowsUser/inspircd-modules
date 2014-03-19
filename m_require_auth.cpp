@@ -143,7 +143,7 @@ class CommandGALine: public Command
 protected:
 	std::string linename;
 public:
-    CommandGALine(Module* c, std::string linetype = "A") : Command(c, linetype+"LINE", 1, 3)
+    CommandGALine(Module* c, std::string linetype = "GA") : Command(c, linetype+"LINE", 1, 3)
     {
         flags_needed = 'o';
         this->syntax = "<nick> [<duration> :<reason>]";
