@@ -190,7 +190,7 @@ public:
 				gal = new GALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
 				result = (ServerInstance->XLines->AddLine(gal, user));
 			}
-			else if(strcmp(linename.c_str(), "GA")==0)
+			else if(strcmp(linename.c_str(), "A")==0)
 			{
 				al = new ALine(ServerInstance->Time(), duration, user->nick.c_str(), parameters[2].c_str(), ih.first.c_str(), ih.second.c_str());
 				result = (ServerInstance->XLines->AddLine(al, user));
